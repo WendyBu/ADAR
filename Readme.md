@@ -1,6 +1,5 @@
 # ADAR editing analysis 2019
 ## Experiment design
-<<<<<<< HEAD
    prostate cancer cells <br>
       1. group1: control shRNA  <br>
       2. group2: ADAR1 shRNA  <br>
