@@ -29,68 +29,76 @@ def get_frequency_table(inputFile):
     return df_freq
 
 
-def combine_freq_tables_cont_ADAR():
+def combine_freq_tables_cont_ADAR(geneName):
+    ADAR = pd.DataFrame()
     A1 = get_frequency_table("../clean_AGTC/A1.txt")
     A2 = get_frequency_table("../clean_AGTC/A2.txt")
-    A7 = get_frequency_table("../clean_AGTC/A7.txt")
-    A8 = get_frequency_table("../clean_AGTC/A8.txt")
-    A9 = get_frequency_table("../clean_AGTC/A9.txt")
-    A10 = get_frequency_table("../clean_AGTC/A10.txt")
     control = A1.join(A2, how="outer", lsuffix="_A1", rsuffix="_A2")
-    A7_A8 = A7.join(A8, how="outer", lsuffix="_A7", rsuffix="_A8")
-    A9_A10 = A9.join(A10, how="outer", lsuffix="_A9", rsuffix="_A10")
-    ADAR = A7_A8.join(A9_A10, how="outer")
+    if geneName == "ADAR1":
+        A7 = get_frequency_table("../clean_AGTC/A7.txt")
+        A8 = get_frequency_table("../clean_AGTC/A8.txt")
+        A9 = get_frequency_table("../clean_AGTC/A9.txt")
+        A10 = get_frequency_table("../clean_AGTC/A10.txt")
+        A7_A8 = A7.join(A8, how="outer", lsuffix="_A7", rsuffix="_A8")
+        A9_A10 = A9.join(A10, how="outer", lsuffix="_A9", rsuffix="_A10")
+        ADAR = A7_A8.join(A9_A10, how="outer")
+    elif geneName == "ADAR2":
+        A11 = get_frequency_table("../clean_AGTC/A11.txt")
+        A12 = get_frequency_table("../clean_AGTC/A12.txt")
+        ADAR = A11.join(A12, how="outer", lsuffix ="_A11", rsuffix= "_A12")
+    else:
+        print "No ADAR file was found!"
     control_ADAR = control.join(ADAR, how="outer")
     return control_ADAR
 
 
-def clean_list(s):
-    s_list = s.tolist()
-    s_list_clean = [x for x in s_list if str(x)!= "nan"]
-    return s_list_clean
-
-
-def histogram_frequency_distribution(df):
-    ctr1 = clean_list(df.Frequency_A1)
-    ctr2 = clean_list(df.Frequency_A2)
-    ADAR_1 = clean_list(df.Frequency_A7)
-    ADAR_2 = clean_list(df.Frequency_A8)
-    ADAR_3 = clean_list(df.Frequency_A9)
-    ADAR_4 = clean_list(df.Frequency_A10)
-
-    # print ks_2samp(ctr1, ctr2)
-    # print ks_2samp(ADAR_1,ADAR_2)
-    # print ks_2samp(ADAR_3, ADAR_4)  # ***
-
-    ctr = ctr1+ctr2
-    ADAR_sh1 = ADAR_1 + ADAR_2
-    ADAR_sh2 = ADAR_3 + ADAR_4
-    ADAR = ADAR_sh1 + ADAR_sh2
-
-    ctrx, bins = np.histogram(ctr, bins=49)
-
-    density_ctr = stats.gaussian_kde(ctr)
-    density_adar = stats.gaussian_kde(ADAR_1)
-
-    n, x, _ = plt.hist(ctr, bins=50, alpha=0.5, label="Control", density=True,  fill=False, edgecolor="black")
-    plt.plot(x, density_ctr(x))
-    m, y, _ = plt.hist(ADAR_1, bins=50, alpha=0.5, label="ADAR", density=True, fill=False, edgecolor="green")
-    plt.plot(y, density_adar(y))
-    # plt.hist(ADAR_sh2, bins=100, alpha=0.5, label="ADAR_sh2", density=True, fill=False, edgecolor="green")
-    plt.legend(loc='upper right')
-    plt.show()
-
-    diff = n - m
-    print diff, len(diff)
-    print bins, len(bins)
-    plt.plot(bins, diff)
-    plt.show()
-
-    # print ks_2samp(ctr, ADAR_sh1)  # ***
-    # print ks_2samp(ctr, ADAR_sh2)
-    # print ks_2samp(ADAR_sh1, ADAR_sh2) # ***
-    # print ks_2samp(ctr, ADAR)  #***
-    pass
+# def clean_list(s):
+#     s_list = s.tolist()
+#     s_list_clean = [x for x in s_list if str(x)!= "nan"]
+#     return s_list_clean
+#
+#
+# def histogram_frequency_distribution(df):
+#     ctr1 = clean_list(df.Frequency_A1)
+#     ctr2 = clean_list(df.Frequency_A2)
+#     ADAR_1 = clean_list(df.Frequency_A7)
+#     ADAR_2 = clean_list(df.Frequency_A8)
+#     ADAR_3 = clean_list(df.Frequency_A9)
+#     ADAR_4 = clean_list(df.Frequency_A10)
+#
+#     # print ks_2samp(ctr1, ctr2)
+#     # print ks_2samp(ADAR_1,ADAR_2)
+#     # print ks_2samp(ADAR_3, ADAR_4)  # ***
+#
+#     ctr = ctr1+ctr2
+#     ADAR_sh1 = ADAR_1 + ADAR_2
+#     ADAR_sh2 = ADAR_3 + ADAR_4
+#     ADAR = ADAR_sh1 + ADAR_sh2
+#
+#     ctrx, bins = np.histogram(ctr, bins=49)
+#
+#     density_ctr = stats.gaussian_kde(ctr)
+#     density_adar = stats.gaussian_kde(ADAR_1)
+#
+#     n, x, _ = plt.hist(ctr, bins=50, alpha=0.5, label="Control", density=True,  fill=False, edgecolor="black")
+#     plt.plot(x, density_ctr(x))
+#     m, y, _ = plt.hist(ADAR_1, bins=50, alpha=0.5, label="ADAR", density=True, fill=False, edgecolor="green")
+#     plt.plot(y, density_adar(y))
+#     # plt.hist(ADAR_sh2, bins=100, alpha=0.5, label="ADAR_sh2", density=True, fill=False, edgecolor="green")
+#     plt.legend(loc='upper right')
+#     plt.show()
+#
+#     diff = n - m
+#     print diff, len(diff)
+#     print bins, len(bins)
+#     plt.plot(bins, diff)
+#     plt.show()
+#
+#     # print ks_2samp(ctr, ADAR_sh1)  # ***
+#     # print ks_2samp(ctr, ADAR_sh2)
+#     # print ks_2samp(ADAR_sh1, ADAR_sh2) # ***
+#     # print ks_2samp(ctr, ADAR)  #***
+#     pass
 
 
 def increased_ADAR_sites(df, cutoff = 0.1):
@@ -102,7 +110,8 @@ def increased_ADAR_sites(df, cutoff = 0.1):
     :return:
     """
     df["control_freq_mean"] = df[["Frequency_A1", "Frequency_A2"]].mean(axis=1, skipna=True)
-    df["ADAR_freq_mean"] = df[["Frequency_A7", "Frequency_A8", "Frequency_A9", "Frequency_A10"]].mean(axis=1, skipna=True)
+    # df["ADAR_freq_mean"] = df[["Frequency_A7", "Frequency_A8", "Frequency_A9", "Frequency_A10"]].mean(axis=1, skipna=True)
+    df["ADAR_freq_mean"] = (df.ix[:, 2:]).mean(axis=1, skipna=True)
     df["ADAR_diff_ctr"] = df.ADAR_freq_mean - df.control_freq_mean   # increase editing sites
     diff_df  =  df[df["ADAR_diff_ctr"] >= cutoff]
     all_adar_sites_list = []
@@ -129,7 +138,8 @@ def define_ADAR_sites(df, cutoff = 0.05):
     :return:
     """
     df["control_freq_mean"] = df[["Frequency_A1", "Frequency_A2"]].mean(axis=1, skipna=True)
-    df["ADAR_freq_mean"] = df[["Frequency_A7", "Frequency_A8", "Frequency_A9", "Frequency_A10"]].mean(axis=1, skipna=True)
+    # df["ADAR_freq_mean"] = df[["Frequency_A7", "Frequency_A8", "Frequency_A9", "Frequency_A10"]].mean(axis=1, skipna=True)
+    df["ADAR_freq_mean"] = (df.ix[:, 2:]).mean(axis=1,skipna=True)
     df["ADAR_diff_ctr"] = df.control_freq_mean - df.ADAR_freq_mean   # increase editing sites
     diff_df  =  df[df["ADAR_diff_ctr"] >= cutoff]
     all_adar_sites_list = []
@@ -231,14 +241,17 @@ def increased_ADAR(df):
 def plot_wired(ctr_ADAR_freq_df):
     decreased_table = getcutoff_ADAR(ctr_ADAR_freq_df)
     increased_table = increased_ADAR(ctr_ADAR_freq_df)
+    decreased_number = decreased_table.shape[0]
+    increased_number = increased_table.shape[0]
+    print decreased_table.head()
     df = decreased_table.join(increased_table, lsuffix="_decreased", rsuffix="_increase")
     df.sort_index(ascending=True, inplace=True)
     s = np.linspace(0, 100, num=101, endpoint=True)
     s = np.asanyarray(s)
     df["order"] = s
-    df["decrease_percentage"] =  df["0_decreased"]/8983
-    df["increase_percentage"] = df["0_increase"]/5394
-    df.to_csv("../editingPool2/table_increase_decrease_adar.xls", sep="\t")
+    df["decrease_percentage"] =  df["0_decreased"]/decreased_number
+    df["increase_percentage"] = df["0_increase"]/increased_number
+    # df.to_csv("../editingPool2/table_increase_decrease_adar.xls", sep="\t")
     x = df["increase_percentage"]
     y = df["decrease_percentage"]
 
@@ -269,17 +282,31 @@ def find_shortest_distance(df):
     distance = df.dist.tolist()
     plt.plot(cutoffs, distance)
     plt.show()
-    pass
-
+    return optimize_cutoff
 
 
 def main():
-    ctr_ADAR_freq_df = combine_freq_tables_cont_ADAR()
+    ################### Get the frequency Table###############################
+    ctr_ADAR_freq_df = combine_freq_tables_cont_ADAR("ADAR2")  # or ADAR1
+
+    ####################Look for ADAR cutoff###################################
+    ROC_data = plot_wired(ctr_ADAR_freq_df)
+    ADAR_cutoffs = find_shortest_distance(ROC_data)
+    print ADAR_cutoffs
+
+
+
+
+
+
+
+
+
+
     #histogram_frequency_distribution(ctr_ADAR_freq_df)   # the frequency distribution map of three samples
 
     # plot the specfic figures to look for cutoff.
-    # ROC_data = plot_wired(ctr_ADAR_freq_df)
-    # find_shortest_distance(ROC_data)
+
 
     ############## all adar changed sites##########################################
     # all_decreased_size, totalNum_decrease = define_ADAR_sites(ctr_ADAR_freq_df, cutoff=0.00)
@@ -296,13 +323,13 @@ def main():
     # cutoff_numberSites = getcutoff_ADAR()
 
     # step2 : use the decided cutoff to generate ADAR sites
-    all_adar_sites, num_sites = define_ADAR_sites(ctr_ADAR_freq_df, 0.09)
-    print num_sites
-    all_adar_sites = list(set(all_adar_sites))
-
-    # # step 3 : cross with EZH2 sites
-    ezh2_df, up_df, down_df = EZH2_sites_inADAR_pool(all_adar_sites, 0.10)
-    # print ezh2_df.groupby(["annot1"]).size()
+    # all_adar_sites, num_sites = define_ADAR_sites(ctr_ADAR_freq_df, 0.09)
+    # print num_sites
+    # all_adar_sites = list(set(all_adar_sites))
+    #
+    # # # step 3 : cross with EZH2 sites
+    # ezh2_df, up_df, down_df = EZH2_sites_inADAR_pool(all_adar_sites, 0.10)
+    # # print ezh2_df.groupby(["annot1"]).size()
     # print up_df.groupby(["annot1"]).size()
     # print down_df.groupby(["annot1"]).size()
     pass
@@ -313,3 +340,5 @@ if __name__ == "__main__":
 
 
 
+# work for both ADAR1 and ADAR2
+# input has to be clear ADAR1 or ADAR2
