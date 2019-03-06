@@ -18,3 +18,29 @@ def find_all_genes(df, refList):
     return sampleTable
 
 
+def add_annot(df):
+    ref = pd.read_csv("../database/hg19_AG_editing_reference.txt", sep="\t", index_col=0)
+    ref = ref[["gene", "annot1", "annot2"]]
+    return df.join(ref, how="left")
+
+
+def filter_3UTR(df):
+
+    pass
+
+
+
+
+def filter_5UTR(df):
+
+    pass
+
+
+
+def filter_intron(df):
+
+    pass
+
+
+
+
