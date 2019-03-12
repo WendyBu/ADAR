@@ -24,22 +24,6 @@ def add_annot(df):
     return df.join(ref, how="left")
 
 
-def filter_3UTR(df):
-
-    pass
-
-
-
-
-def filter_5UTR(df):
-
-    pass
-
-
-
-def filter_intron(df):
-
-    pass
 
 
 
