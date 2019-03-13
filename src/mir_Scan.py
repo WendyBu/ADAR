@@ -37,12 +37,7 @@ def add_frequency(df_3UTR, df):
 
 
 def main():
-    sampleFiles = ["../Compare_category/EZH2_ADAR1_3UTR.xls", \
-                   "../Compare_category/EZH2_ADAR2_3UTR.xls", \
-                   "../Compare_category/ADAR1_ADAR2_3UTR.xls",\
-                   "../Compare_category/all_inter_3UTR.xls"]
-
-    for sampleFile in sampleFiles:
+    for sampleFile in glob.glob("../Compare_category/*.xls"):
         sample = pd.read_csv(sampleFile, sep="\t", index_col=0)
         sample[["chr", "pos"]] = sample.index.to_series().str.split("_", expand=True)
         sample["pos"] = pd.to_numeric(sample["pos"])
